@@ -10,7 +10,7 @@ dotenv.config();
 
 // Configuration
 const CONFIG = {
-  dryRun: process.env.DRY_RUN === 'true' || true, // Start with dry run
+  dryRun: process.env.DRY_RUN !== 'false', // Default to dry run, set DRY_RUN=false to disable
   useAI: process.env.USE_AI === 'true',
   maxEmails: parseInt(process.env.MAX_EMAILS || '50'),
   minConfidence: parseFloat(process.env.MIN_CONFIDENCE || '0.7'),

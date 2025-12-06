@@ -1,8 +1,18 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openai = null;
+
+function getOpenAIClient() {
+  if (!openai) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY is required for AI classification');
+    }
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openai;
+}
 
 /**
  * Classify email as marketing/promotional using AI
@@ -23,7 +33,8 @@ Respond with JSON:
   "shouldUnsubscribe": boolean}`;
 
   try {
-    const response = await openai.chat.completions.create({
+    const client = getOpenAIClient();
+    const response = await client.chat.completions.create({
       model: 'gpt-4o-mini', // or 'gpt-3.5-turbo' for cost savings
       messages: [
         {
