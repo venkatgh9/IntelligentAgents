@@ -2,6 +2,7 @@ import { google } from 'googleapis';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import readline from 'readline';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -74,14 +75,32 @@ async function getNewToken(oAuth2Client) {
     scope: SCOPES,
   });
 
-  console.log('Authorize this app by visiting this url:', authUrl);
-  console.log('Enter the code from that page here: ');
+  console.log('\n🔐 Authorization required!');
+  console.log('Authorize this app by visiting this url:');
+  console.log(authUrl);
+  console.log('\nAfter authorization, you will be redirected to a page.');
+  console.log('Copy the "code" parameter from the URL and paste it below.\n');
 
-  // In a real app, you'd use a web server or read from stdin
-  // For now, we'll throw an error prompting manual setup
-  throw new Error(
-    `Please visit ${authUrl} to authorize the app, then save the token manually.`
-  );
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve, reject) => {
+    rl.question('Enter the authorization code: ', async (code) => {
+      rl.close();
+      
+      try {
+        const { tokens } = await oAuth2Client.getToken(code.trim());
+        oAuth2Client.setCredentials(tokens);
+        await saveToken(tokens);
+        console.log('✅ Token stored successfully!\n');
+        resolve(oAuth2Client);
+      } catch (error) {
+        reject(new Error(`Failed to get token: ${error.message}`));
+      }
+    });
+  });
 }
 
 /**
