@@ -1,0 +1,8 @@
+node_modules/
+config/credentials.json
+config/token.json
+config/whitelist.json
+.env
+*.log
+.DS_Store
+

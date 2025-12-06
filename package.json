@@ -1,0 +1,28 @@
+{
+  "name": "gmail-unsubscribe-agent",
+  "version": "1.0.0",
+  "description": "AI agent to automatically unsubscribe from marketing emails in Gmail",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node src/test.js"
+  },
+  "keywords": [
+    "gmail",
+    "unsubscribe",
+    "email",
+    "automation",
+    "ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "googleapis": "^128.0.0",
+    "dotenv": "^16.3.1",
+    "cheerio": "^1.0.0-rc.12",
+    "openai": "^4.20.1",
+    "puppeteer": "^21.5.0"
+  }
+}
