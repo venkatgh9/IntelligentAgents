@@ -24,6 +24,9 @@ async function main() {
   console.log('🚀 Gmail Unsubscribe Agent Starting...');
   console.log(`Mode: ${CONFIG.dryRun ? 'DRY RUN' : 'LIVE'}`);
   console.log(`Classification: ${CONFIG.useAI ? 'AI' : 'Rule-based'}`);
+  if (process.env.GMAIL_ACCOUNT) {
+    console.log(`Account: ${process.env.GMAIL_ACCOUNT}`);
+  }
   console.log('');
 
   try {

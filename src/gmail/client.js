@@ -1,12 +1,21 @@
 import { initializeGmail } from './auth.js';
 
 let gmailClient = null;
+let currentAccount = null;
 
 /**
- * Get Gmail API client (singleton)
+ * Get Gmail API client (singleton, account-aware)
  */
 export async function getGmailClient() {
+  const accountName = process.env.GMAIL_ACCOUNT || 'default';
+  
+  // Reset client if account changed
+  if (gmailClient && currentAccount !== accountName) {
+    gmailClient = null;
+  }
+  
   if (!gmailClient) {
+    currentAccount = accountName;
     gmailClient = await initializeGmail();
   }
   return gmailClient;
