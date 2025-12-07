@@ -22,10 +22,19 @@ async function loadCredentials() {
 }
 
 /**
+ * Get token file path based on GMAIL_ACCOUNT environment variable
+ */
+function getTokenPath() {
+  const accountName = process.env.GMAIL_ACCOUNT;
+  const tokenFileName = accountName ? `token-${accountName}.json` : 'token.json';
+  return path.join(__dirname, '../../config', tokenFileName);
+}
+
+/**
  * Load or create token
  */
 async function loadToken() {
-  const tokenPath = path.join(__dirname, '../../config/token.json');
+  const tokenPath = getTokenPath();
   try {
     const content = await fs.readFile(tokenPath, 'utf-8');
     return JSON.parse(content);
@@ -38,7 +47,7 @@ async function loadToken() {
  * Save token to file
  */
 async function saveToken(token) {
-  const tokenPath = path.join(__dirname, '../../config/token.json');
+  const tokenPath = getTokenPath();
   await fs.writeFile(tokenPath, JSON.stringify(token, null, 2));
 }
 
@@ -75,7 +84,11 @@ async function getNewToken(oAuth2Client) {
     scope: SCOPES,
   });
 
+  const accountName = process.env.GMAIL_ACCOUNT;
   console.log('\n🔐 Authorization required!');
+  if (accountName) {
+    console.log(`Account: ${accountName}`);
+  }
   console.log('Authorize this app by visiting this url:');
   console.log(authUrl);
   console.log('\nAfter authorization, you will be redirected to a page.');
